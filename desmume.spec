@@ -25,17 +25,17 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %package -n %{name}-glade
 Summary:	A Nintendo DS emulator (Glade GUI version)
-Group:		Applications/Emulators
+Group:		Emulators
 License:	GPLv2+
 
 %package -n %{name}-cli
 Summary:	A Nintendo DS emulator (CLI version)
-Group:		Applications/Emulators
+Group:		Emulators
 License:	GPLv2+
 
 %package -n wx%{name}
 Summary:	A Nintendo DS emulator (wxWidgets GUI version)
-Group:		Applications/Emulators
+Group:		Emulators
 License:	GPLv2+
 
 %description
