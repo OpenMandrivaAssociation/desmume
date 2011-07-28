@@ -155,7 +155,7 @@ desktop-file-install --vendor="" \
 %attr(0755,root,root) %{_bindir}/%{name}
 %{_iconsdir}/%{name}.png
 %{_datadir}/applications/%{name}.desktop
-%{_mandir}/man1/desmume.1.lzma
+%{_mandir}/man1/desmume.1.*
 %{_datadir}/pixmaps/DeSmuME.xpm
 
 %files -n %{name}-glade -f %{name}.lang
@@ -165,13 +165,13 @@ desktop-file-install --vendor="" \
 %{_datadir}/%{name}
 %{_iconsdir}/%{name}-glade.png
 %{_datadir}/applications/%{name}-glade.desktop
-%{_mandir}/man1/desmume-glade.1.lzma
+%{_mandir}/man1/desmume-glade.1.*
 
 %files -n %{name}-cli
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog README README.LIN
 %attr(0755,root,root) %{_bindir}/%{name}-cli
-%{_mandir}/man1/desmume-cli.1.lzma
+%{_mandir}/man1/desmume-cli.1.*
 
 %files -n wx%{name}
 %defattr(-,root,root)
