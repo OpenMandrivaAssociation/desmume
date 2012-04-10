@@ -1,15 +1,16 @@
-Name:			desmume
-%define longname	DeSmuME
-Version:		0.9.7
-Release:		%mkrel 1
+%define		longname	DeSmuME
 
+Name:		desmume
+Version:	0.9.8
+Release:	%mkrel 1
 Summary:	A Nintendo DS emulator
 License:	GPLv2+
 Group:		Emulators
 URL:		http://desmume.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source10:	%{name}-48.png
-
+# Add missing in .tar.gz sources in patch
+Patch0:		desmume-0.9.8-missing.patch
 BuildRequires:	gtk2-devel
 BuildRequires:	libglade2.0-devel
 BuildRequires:	gtkglext-devel
@@ -19,9 +20,8 @@ BuildRequires:	pcap-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	recode
 BuildRequires:	intltool
-BuildRequires:	libSDL-devel
-BuildRequires:	libz-devel
-BuildRoot:	%{_tmppath}/%{name}-%{version}
+BuildRequires:	SDL-devel
+BuildRequires:	zlib-devel
 
 %package -n %{name}-glade
 Summary:	A Nintendo DS emulator (Glade GUI version)
@@ -76,9 +76,10 @@ In this package is the wxWidgets version.
 
 %prep
 %setup -q
+%patch0 -p1
 recode l1..u8 AUTHORS ChangeLog
-perl -pi -e 's|\r\n|\n|g' AUTHORS ChangeLog
-find src -name *.[ch]* -exec chmod 644 {} +
+%__perl -pi -e 's|\r\n|\n|g' AUTHORS ChangeLog
+find src -name *.[ch]* -exec %__chmod 644 {} +
 
 %build
 ./autogen.sh
@@ -87,20 +88,18 @@ find src -name *.[ch]* -exec chmod 644 {} +
 %make
 
 %install
-rm -rf %{buildroot}
+%__rm -rf %{buildroot}
 %makeinstall
 
 #glade files
-install -d -m 755 %{buildroot}/%{_datadir}/%{name}
-install -m 644 src/gtk-glade/glade/* %{buildroot}/%{_datadir}/%{name}
+%__install -d -m 755 %{buildroot}/%{_datadir}/%{name}
+%__install -m 644 src/gtk-glade/glade/* %{buildroot}/%{_datadir}/%{name}
 
 #icons
-install -d -m 755 %{buildroot}/%{_iconsdir}
-install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/%{name}.png
-install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/%{name}-glade.png
-install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/wx%{name}.png
-
-#rm -rf %{buildroot}/%{_datadir}/pixmaps
+%__install -d -m 755 %{buildroot}/%{_iconsdir}
+%__install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/%{name}.png
+%__install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/%{name}-glade.png
+%__install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/wx%{name}.png
 
 #xdg menus
 desktop-file-install --vendor="" \
@@ -129,28 +128,10 @@ desktop-file-install --vendor="" \
 
 %find_lang %{name}
 
-%if %mdkversion<200900
-%post
-%{update_menus}
-
-%post -n %{name}-glade
-%{update_menus}
-
-%post -n wx%{name}
-%{update_menus}
-
-%postun
-%{clean_menus}
-
-%postun -n %{name}-glade
-%{clean_menus}
-
-%postun -n wx%{name}
-%{clean_menus}
-%endif
+%clean
+%__rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root)
 %doc AUTHORS ChangeLog README README.LIN
 %attr(0755,root,root) %{_bindir}/%{name}
 %{_iconsdir}/%{name}.png
@@ -159,7 +140,6 @@ desktop-file-install --vendor="" \
 %{_datadir}/pixmaps/DeSmuME.xpm
 
 %files -n %{name}-glade -f %{name}.lang
-%defattr(-,root,root)
 %doc AUTHORS ChangeLog README README.LIN
 %attr(0755,root,root) %{_bindir}/%{name}-glade
 %{_datadir}/%{name}
@@ -168,19 +148,13 @@ desktop-file-install --vendor="" \
 %{_mandir}/man1/desmume-glade.1.*
 
 %files -n %{name}-cli
-%defattr(-,root,root)
 %doc AUTHORS ChangeLog README README.LIN
 %attr(0755,root,root) %{_bindir}/%{name}-cli
 %{_mandir}/man1/desmume-cli.1.*
 
 %files -n wx%{name}
-%defattr(-,root,root)
 %doc AUTHORS ChangeLog README README.LIN
 %attr(0755,root,root) %{_bindir}/wx%{name}
 %{_iconsdir}/wx%{name}.png
 %{_datadir}/applications/wx%{name}.desktop
-
-
-%clean
-rm -rf %{buildroot}
 
