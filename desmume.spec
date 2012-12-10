@@ -158,3 +158,61 @@ desktop-file-install --vendor="" \
 %{_iconsdir}/wx%{name}.png
 %{_datadir}/applications/wx%{name}.desktop
 
+
+
+%changelog
+* Tue Apr 10 2012 Andrey Bondrov <abondrov@mandriva.org> 0.9.8-1
++ Revision: 790269
+- New version 0.9.8
+
+* Fri Jul 29 2011 Andrey Bondrov <abondrov@mandriva.org> 0.9.7-1
++ Revision: 692166
+- Fix group
+- Fix man pages compression issue
+- imported package desmume
+
+
+* Thu Jul 21 2011 Andrey Bondrov <bondrov@math.dvgu.ru> 0.9.7-1mdv2011.0
+- New version 0.9.7
+
+* Tue May 25 2010 Guillaume Bedot <littletux@zarb.org> 0.9.6-2plf2010.1
+- build also wx gui
+
+* Thu May 20 2010 Guillaume Bedot <littletux@zarb.org> 0.9.6-1plf2010.1
+- 0.9.6
+
+* Sat Sep  5 2009 Guillaume Bedot <littletux@zarb.org> 0.9.4-1plf2010.0
+- 0.9.4
+
+* Mon May 18 2009 Guillaume Bedot <littletux@zarb.org> 0.9.2-2plf2010.0
+- fix buildrequires
+
+* Mon May 18 2009 Guillaume Bedot <littletux@zarb.org> 0.9.2-1plf2009.1
+- 0.9.2-1
+
+* Mon Jan  5 2009 Guillaume Bedot <littletux@zarb.org> 0.9-1plf2009.1
+- 0.9
+
+* Wed Apr 23 2008 Guillaume Bedot <littletux@zarb.org> 0.8-1plf2009.0
+- 0.8
+
+* Tue Aug 14 2007 Guillaume Bedot <littletux@zarb.org> 0.7.3-1plf2008.0
+- Release 0.7.3, with a french translation for desmume-glade
+
+* Thu Jul 11 2007 Guillaume Bedot <littletux@zarb.org> 0.7.2-1plf2008.0
+- RMLL release
+
+* Thu Jun 21 2007 Guillaume Bedot <littletux@zarb.org> 0.7.1-1plf2008.0
+- Release 0.7.1
+
+* Mon May 14 2007 Guillaume Bedot <littletux@zarb.org> 0.7.0-1plf2008.0
+- Release 0.7.0
+- New menu item
+- Aiglx / Gui warning
+
+* Wed Mar 21 2007 Guillaume Bedot <littletux@zarb.org> 0.6.0-2plf2007.1
+- Fix all glade paths
+
+* Wed Mar 21 2007 Guillaume Bedot <littletux@zarb.org> 0.6.0-1plf2007.1
+- First PLF package
+
