@@ -1,16 +1,15 @@
 %define		longname	DeSmuME
 
-Name:		desmume
-Version:	0.9.9
-Release:	1
 Summary:	A Nintendo DS emulator
+Name:		desmume
+Version:	0.9.10
+Release:	1
 License:	GPLv2+
 Group:		Emulators
-URL:		http://desmume.sourceforge.net/
+Url:		http://desmume.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source10:	%{name}-48.png
-# Add missing in .tar.gz sources in patch
-Patch0:		desmume-0.9.9-missing.patch
+Patch0:		desmume-0.9.10-no-return-for-void.patch
 BuildRequires:	desktop-file-utils
 BuildRequires:	intltool
 BuildRequires:	recode
@@ -21,7 +20,7 @@ BuildRequires:	pkgconfig(libglade-2.0)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pcap-devel
-BuildRequires:	wxgtku2.8-devel
+Obsoletes:	wx%{name} < 0.9.10
 
 %description
 DeSmuME is a Nintendo DS emulator running homebrew demos and commercial 
@@ -85,27 +84,6 @@ In this package is the CLI version (without a GUI).
 
 #----------------------------------------------------------------------------
 
-%package -n wx%{name}
-Summary:	A Nintendo DS emulator (wxWidgets GUI version)
-Group:		Emulators
-
-%description -n wx%{name}
-DeSmuME is a Nintendo DS emulator running homebrew demos and commercial
-games... For the latter ones, you should own the games corresponding the
-roms you play with.
-
-You can find a compatibility list here : http://desmume.org/?page_id=15
-
-In this package is the wxWidgets version.
-
-%files -n wx%{name}
-%doc AUTHORS ChangeLog README README.LIN
-%attr(0755,root,root) %{_bindir}/wx%{name}
-%{_iconsdir}/wx%{name}.png
-%{_datadir}/applications/wx%{name}.desktop
-
-#----------------------------------------------------------------------------
-
 %prep
 %setup -q
 %patch0 -p1
@@ -117,7 +95,6 @@ find src -name *.[ch]* -exec chmod 644 {} +
 ./autogen.sh
 %configure2_5x \
 	--enable-wifi \
-	--enable-wxwidgets \
 	--enable-glade
 %make
 
@@ -132,7 +109,6 @@ install -m 644 src/gtk-glade/glade/* %{buildroot}/%{_datadir}/%{name}
 install -d -m 755 %{buildroot}/%{_iconsdir}
 install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/%{name}.png
 install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/%{name}-glade.png
-install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/wx%{name}.png
 
 #xdg menus
 desktop-file-install --vendor="" \
@@ -150,14 +126,6 @@ desktop-file-install --vendor="" \
  --add-category="Emulator" \
  --dir=%{buildroot}%{_datadir}/applications \
  %{buildroot}%{_datadir}/applications/%{name}-glade.desktop
-
-desktop-file-install --vendor="" \
- --remove-category="Application" \
- --remove-key="Version" \
- --add-category="X-MandrivaLinux-MoreApplications-Emulators" \
- --add-category="Emulator" \
- --dir=%{buildroot}%{_datadir}/applications \
- %{buildroot}%{_datadir}/applications/wx%{name}.desktop
 
 %find_lang %{name}
 
