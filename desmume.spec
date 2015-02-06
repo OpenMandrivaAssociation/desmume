@@ -3,7 +3,7 @@
 Summary:	A Nintendo DS emulator
 Name:		desmume
 Version:	0.9.10
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Emulators
 Url:		http://desmume.sourceforge.net/
