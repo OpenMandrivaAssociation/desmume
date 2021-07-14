@@ -1,0 +1,14 @@
+diff -up desmume/src/texcache.cpp.omv~ desmume/src/texcache.cpp
+--- desmume/src/texcache.cpp.omv~	2021-07-14 16:43:03.032341470 +0200
++++ desmume/src/texcache.cpp	2021-07-14 16:43:45.126052213 +0200
+@@ -1165,8 +1165,8 @@ void NDSTextureUnpack4x4(const size_t sr
+ 	
+ 	for (size_t y = 0, d = 0; y < yTmpSize; y++)
+ 	{
+-		u32 tmpPos[4]={(y<<2)*sizeX,((y<<2)+1)*sizeX,
+-			((y<<2)+2)*sizeX,((y<<2)+3)*sizeX};
++		u32 tmpPos[4]={static_cast<u32>((y<<2)*sizeX),static_cast<u32>(((y<<2)+1)*sizeX),
++			static_cast<u32>(((y<<2)+2)*sizeX),static_cast<u32>(((y<<2)+3)*sizeX)};
+ 		for (size_t x = 0; x < xTmpSize; x++, d++)
+ 		{
+ 			if (d >= limit)

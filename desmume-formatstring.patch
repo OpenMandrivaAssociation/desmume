@@ -1,0 +1,30 @@
+diff -up desmume/src/commandline.cpp.omv~ desmume/src/commandline.cpp
+--- desmume/src/commandline.cpp.omv~	2021-07-14 16:40:40.271922244 +0200
++++ desmume/src/commandline.cpp	2021-07-14 16:40:58.122225560 +0200
+@@ -99,7 +99,7 @@ static std::string strtoupper(const std:
+ }
+ 
+ #define ENDL "\n"
+-static const char* help_string = \
++static constexpr char* help_string = \
+ "Arguments affecting overall emulator behaviour: (`user settings`):" ENDL
+ " --num-cores N              Override numcores detection and use this many" ENDL
+ " --spu-synch                Use SPU synch (crackles; helps streams; default ON)" ENDL
+@@ -384,7 +384,7 @@ bool CommandLine::parse(int argc,char **
+ 
+ 	if(opt_help)
+ 	{
+-		printf(help_string);
++		printf("%s", help_string);
+ 		exit(1);
+ 	}
+ 
+@@ -558,7 +558,7 @@ bool CommandLine::validate()
+ 
+ void CommandLine::errorHelp(const char* binName)
+ {
+-	printerror(help_string);
++	printerror("%s", help_string);
+ }
+ 
+ void CommandLine::process_movieCommands()

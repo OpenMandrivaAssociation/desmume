@@ -1,26 +1,33 @@
+%define		date		20210714
 %define		longname	DeSmuME
 
 Summary:	A Nintendo DS emulator
 Name:		desmume
-Version:	0.9.10
-Release:	2
+%if 0%{?date}
+Version:	0.9.12
+Release:	0.%{date}.1
+%else
+Version:	0.9.11
+Release:	1
+%endif
 License:	GPLv2+
 Group:		Emulators
-Url:		http://desmume.sourceforge.net/
-Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Url:		http://desmume.org/
+# Upstream recommends not using stable releases - see http://desmume.org/download/
+Source0:	https://github.com/TASVideos/desmume/archive/refs/heads/master.tar.gz
 Source10:	%{name}-48.png
-Patch0:		desmume-0.9.10-no-return-for-void.patch
+Patch0:		desmume-formatstring.patch
+Patch1:		desmume-compile.patch
 BuildRequires:	desktop-file-utils
 BuildRequires:	intltool
 BuildRequires:	recode
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(gtkglext-1.0)
 BuildRequires:	pkgconfig(libagg)
-BuildRequires:	pkgconfig(libglade-2.0)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pcap-devel
-Obsoletes:	wx%{name} < 0.9.10
+%rename %{name}-glade
 
 %description
 DeSmuME is a Nintendo DS emulator running homebrew demos and commercial 
@@ -29,38 +36,15 @@ roms you play with.
 
 You can find a compatibility list here : http://desmume.org/?page_id=15
 
-In this package is the GTK GUI version.
+In this package is the GUI version.
 
 %files
-%doc AUTHORS ChangeLog README README.LIN
+%doc desmume/AUTHORS desmume/ChangeLog desmume/README desmume/README.LIN
 %attr(0755,root,root) %{_bindir}/%{name}
-%{_iconsdir}/%{name}.png
-%{_datadir}/applications/%{name}.desktop
-%{_mandir}/man1/desmume.1.*
-%{_datadir}/pixmaps/DeSmuME.xpm
-
-#----------------------------------------------------------------------------
-
-%package -n %{name}-glade
-Summary:	A Nintendo DS emulator (Glade GUI version)
-Group:		Emulators
-
-%description -n %{name}-glade
-DeSmuME is a Nintendo DS emulator running homebrew demos and commercial 
-games... For the latter ones, you should own the games corresponding the 
-roms you play with.
-
-You can find a compatibility list here : http://desmume.org/?page_id=15
-
-In this package is the GTK/Glade version, which includes a translation.
-
-%files -n %{name}-glade -f %{name}.lang
-%doc AUTHORS ChangeLog README README.LIN
-%attr(0755,root,root) %{_bindir}/%{name}-glade
-%{_datadir}/%{name}
-%{_iconsdir}/%{name}-glade.png
-%{_datadir}/applications/%{name}-glade.desktop
-%{_mandir}/man1/desmume-glade.1.*
+%{_datadir}/icons/*/*/*/org.desmume.DeSmuME.svg
+%{_datadir}/metainfo/org.desmume.DeSmuME.metainfo.xml
+%{_datadir}/applications/*.desktop
+%{_mandir}/man1/desmume.1*
 
 #----------------------------------------------------------------------------
 
@@ -78,54 +62,32 @@ You can find a compatibility list here : http://desmume.org/?page_id=15
 In this package is the CLI version (without a GUI).
 
 %files -n %{name}-cli
-%doc AUTHORS ChangeLog README README.LIN
+%doc desmume/AUTHORS desmume/ChangeLog desmume/README desmume/README.LIN
 %attr(0755,root,root) %{_bindir}/%{name}-cli
-%{_mandir}/man1/desmume-cli.1.*
+%{_mandir}/man1/desmume-cli.1*
 
 #----------------------------------------------------------------------------
 
 %prep
-%setup -q
-%patch0 -p1
-recode l1..u8 AUTHORS ChangeLog
-perl -pi -e 's|\r\n|\n|g' AUTHORS ChangeLog
-find src -name *.[ch]* -exec chmod 644 {} +
+%if 0%{?date}
+%autosetup -p0 -n %{name}-master
+%else
+%autosetup -p1
+%endif
+recode l1..u8 %{name}/AUTHORS %{name}/ChangeLog
+perl -pi -e 's|\r\n|\n|g' %{name}/AUTHORS %{name}/ChangeLog
+find . -name *.[ch]* -exec chmod 644 {} +
+
+cd desmume/src/frontend/posix
+%meson \
+	-Dopenal=true \
+	-Dfrontend-gtk=true \
+	-Dfrontend-cli=true \
+	-Dwifi=true \
+	-Dgdb-stub=true
 
 %build
-./autogen.sh
-%configure2_5x \
-	--enable-wifi \
-	--enable-glade
-%make
+%ninja_build -C desmume/src/frontend/posix/build
 
 %install
-%makeinstall_std
-
-#glade files
-install -d -m 755 %{buildroot}/%{_datadir}/%{name}
-install -m 644 src/gtk-glade/glade/* %{buildroot}/%{_datadir}/%{name}
-
-#icons
-install -d -m 755 %{buildroot}/%{_iconsdir}
-install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/%{name}.png
-install -m 644 %{SOURCE10} %{buildroot}/%{_iconsdir}/%{name}-glade.png
-
-#xdg menus
-desktop-file-install --vendor="" \
- --remove-category="Application" \
- --remove-key="Version" \
- --add-category="X-MandrivaLinux-MoreApplications-Emulators" \
- --add-category="Emulator" \
- --dir=%{buildroot}%{_datadir}/applications \
- %{buildroot}%{_datadir}/applications/%{name}.desktop
-
-desktop-file-install --vendor="" \
- --remove-category="Application" \
- --remove-key="Version" \
- --add-category="X-MandrivaLinux-MoreApplications-Emulators" \
- --add-category="Emulator" \
- --dir=%{buildroot}%{_datadir}/applications \
- %{buildroot}%{_datadir}/applications/%{name}-glade.desktop
-
-%find_lang %{name}
-
+%ninja_install -C desmume/src/frontend/posix/build
