@@ -1,4 +1,4 @@
-%define		date		20210714
+%define		date		20211027
 %define		longname	DeSmuME
 
 Summary:	A Nintendo DS emulator
@@ -17,16 +17,23 @@ Url:		http://desmume.org/
 Source0:	https://github.com/TASVideos/desmume/archive/refs/heads/master.tar.gz
 Source10:	%{name}-48.png
 Patch0:		desmume-formatstring.patch
-Patch1:		desmume-compile.patch
+#Patch1:		desmume-compile.patch
 BuildRequires:	desktop-file-utils
 BuildRequires:	intltool
 BuildRequires:	recode
-BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(sdl2)
+BuildRequires:	pkgconfig(libpcap)
+BuildRequires:	pkgconfig(openal)
+BuildRequires:	pkgconfig(alsa)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(soundtouch)
+BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	pkgconfig(gtkglext-1.0)
 BuildRequires:	pkgconfig(libagg)
-BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(zlib)
-BuildRequires:	pcap-devel
+BuildRequires:	pkgconfig(alsa)
+BuildRequires:	pkgconfig(gl)
 %rename %{name}-glade
 
 %description
@@ -78,6 +85,11 @@ recode l1..u8 %{name}/AUTHORS %{name}/ChangeLog
 perl -pi -e 's|\r\n|\n|g' %{name}/AUTHORS %{name}/ChangeLog
 find . -name *.[ch]* -exec chmod 644 {} +
 
+# FIXME as of 2021/10/27, crashes on startup when
+# built with clang
+export CC=gcc
+export CXX=g++
+
 cd desmume/src/frontend/posix
 %meson \
 	-Dopenal=true \
@@ -87,7 +99,7 @@ cd desmume/src/frontend/posix
 	-Dgdb-stub=true
 
 %build
-%ninja_build -C desmume/src/frontend/posix/build
+%ninja_build -v -C desmume/src/frontend/posix/build
 
 %install
 %ninja_install -C desmume/src/frontend/posix/build

@@ -1,14 +1,18 @@
-diff -up desmume/src/texcache.cpp.omv~ desmume/src/texcache.cpp
---- desmume/src/texcache.cpp.omv~	2021-07-14 16:43:03.032341470 +0200
-+++ desmume/src/texcache.cpp	2021-07-14 16:43:45.126052213 +0200
-@@ -1165,8 +1165,8 @@ void NDSTextureUnpack4x4(const size_t sr
- 	
+diff -up desmume-master/desmume/src/texcache.cpp.2~ desmume-master/desmume/src/texcache.cpp
+--- desmume-master/desmume/src/texcache.cpp.2~	2021-10-27 18:51:35.765537647 +0200
++++ desmume-master/desmume/src/texcache.cpp	2021-10-27 18:52:50.437630424 +0200
+@@ -1166,10 +1166,10 @@ void NDSTextureUnpack4x4(const size_t sr
  	for (size_t y = 0, d = 0; y < yTmpSize; y++)
  	{
--		u32 tmpPos[4]={(y<<2)*sizeX,((y<<2)+1)*sizeX,
--			((y<<2)+2)*sizeX,((y<<2)+3)*sizeX};
-+		u32 tmpPos[4]={static_cast<u32>((y<<2)*sizeX),static_cast<u32>(((y<<2)+1)*sizeX),
-+			static_cast<u32>(((y<<2)+2)*sizeX),static_cast<u32>(((y<<2)+3)*sizeX)};
+ 		size_t tmpPos[4] = {
+-			((y<<2)+0) * sizeX,
+-			((y<<2)+1) * sizeX,
+-			((y<<2)+2) * sizeX,
+-			((y<<2)+3) * sizeX
++			static_cast<size_t>(((y<<2)+0) * sizeX),
++			static_cast<size_t>(((y<<2)+1) * sizeX),
++			static_cast<size_t>(((y<<2)+2) * sizeX),
++			static_cast<size_t>(((y<<2)+3) * sizeX)
+ 		};
+ 		
  		for (size_t x = 0; x < xTmpSize; x++, d++)
- 		{
- 			if (d >= limit)
