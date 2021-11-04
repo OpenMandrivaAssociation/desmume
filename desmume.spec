@@ -21,6 +21,7 @@ Patch0:		desmume-formatstring.patch
 BuildRequires:	desktop-file-utils
 BuildRequires:	intltool
 BuildRequires:	recode
+BuildRequires:	meson
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(sdl2)
 BuildRequires:	pkgconfig(libpcap)
