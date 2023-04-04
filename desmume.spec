@@ -1,20 +1,14 @@
-%define		date		20211027
+#define		date		20211027
 %define		longname	DeSmuME
 
 Summary:	A Nintendo DS emulator
 Name:		desmume
-%if 0%{?date}
-Version:	0.9.12
-Release:	0.%{date}.1
-%else
-Version:	0.9.11
-Release:	1
-%endif
+Version:	0.9.13
+Release:	%{?date:0.%{date}.}1
 License:	GPLv2+
 Group:		Emulators
 Url:		http://desmume.org/
-# Upstream recommends not using stable releases - see http://desmume.org/download/
-Source0:	https://github.com/TASVideos/desmume/archive/refs/heads/master.tar.gz
+Source0:	https://github.com/TASEmulators/desmume/releases/download/release_%(echo %{version}|sed -e 's,\.,_,g')/desmume-%{version}.tar.xz
 Source10:	%{name}-48.png
 Patch0:		desmume-formatstring.patch
 #Patch1:		desmume-compile.patch
@@ -80,7 +74,7 @@ In this package is the CLI version (without a GUI).
 %if 0%{?date}
 %autosetup -p0 -n %{name}-master
 %else
-%autosetup -p1
+%autosetup -p0
 %endif
 recode l1..u8 %{name}/AUTHORS %{name}/ChangeLog
 perl -pi -e 's|\r\n|\n|g' %{name}/AUTHORS %{name}/ChangeLog
