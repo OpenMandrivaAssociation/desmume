@@ -7,7 +7,7 @@ Version:	0.9.13
 Release:	%{?date:0.%{date}.}1
 License:	GPLv2+
 Group:		Emulators
-Url:		http://desmume.org/
+Url:		https://desmume.org/
 Source0:	https://github.com/TASEmulators/desmume/releases/download/release_%(echo %{version}|sed -e 's,\.,_,g')/desmume-%{version}.tar.xz
 Source10:	%{name}-48.png
 Patch0:		desmume-formatstring.patch
